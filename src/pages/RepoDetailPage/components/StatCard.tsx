@@ -12,7 +12,6 @@ interface StatCardProps {
 const StatCard = ({
   icon: Icon,
   label,
-  value,
   iconColor = "text-primary",
   fillIcon = false,
 }: StatCardProps) => {

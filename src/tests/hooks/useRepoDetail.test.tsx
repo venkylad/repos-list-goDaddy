@@ -19,12 +19,11 @@ describe("useRepoDetail", () => {
   });
 
   it("fetches repo and languages successfully", async () => {
-    // 👈 'waitFor' is now imported, so remove it from the destructuring
     const { result } = renderHook(() => useRepoDetail("godaddy", "gdapi-php"), {
       wrapper,
     });
 
-    await waitFor(() => !result.current.isRepoLoading); // 👈 Use the imported waitFor
+    await waitFor(() => !result.current.isRepoLoading);
 
     expect(result.current.repo?.name).toBe("gdapi-php");
     expect(result.current.languages).toEqual({
@@ -41,12 +40,11 @@ describe("useRepoDetail", () => {
       })
     );
 
-    // 👈 'waitFor' is now imported, so remove it from the destructuring
     const { result } = renderHook(() => useRepoDetail("godaddy", "invalid"), {
       wrapper,
     });
 
-    await waitFor(() => !result.current.isRepoLoading); // 👈 Use the imported waitFor
+    await waitFor(() => !result.current.isRepoLoading);
 
     expect(result.current.repo).toBeUndefined();
     expect(result.current.repoError).toBeDefined();

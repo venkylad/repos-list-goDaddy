@@ -1,73 +1,210 @@
-# React + TypeScript + Vite
+# GoDaddy Repositories Browser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for browsing and searching GoDaddy's GitHub repositories with infinite scroll and real-time search.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Browse Repositories** - View all GoDaddy public repositories with infinite scroll
+- **Real-time Search** - Debounced search using GitHub's Search API (500ms delay)
+- **Repository Details** - Comprehensive view with stats, languages, and metadata
+- **Responsive Design** - Works seamlessly on mobile, tablet, and desktop
+- **Loading States** - Skeleton screens for better user experience
+- **Smart Caching** - React Query caches data for instant subsequent loads
 
-## React Compiler
+## 📦 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** + **TypeScript** - Type-safe UI development
+- **Vite** - Fast build tool and dev server
+- **React Router** - Slug-based routing (`/repos/:owner/:name`)
+- **TanStack Query** - Server state management with caching
+- **Tailwind CSS 4** - Utility-first styling
+- **React Infinite Scroll** - Progressive data loading
+- **Vitest** + **Testing Library** - Comprehensive test coverage
+- **MSW** - API mocking for tests
 
-## Expanding the ESLint configuration
+## 🏃 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+ and npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Clone the repository
+git clone <repository-url>
+cd godaddy-repos
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Available Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run preview    # Preview production build
+npm test           # Run tests
+npm run test:ui    # Run tests with UI
+npm run coverage   # Generate coverage report
+npm run lint       # Lint code
 ```
+
+## 🧪 Testing
+
+Comprehensive test coverage using Vitest, React Testing Library, and MSW.
+
+### Run Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with UI
+npm run test:ui
+
+# Generate coverage report
+npm run coverage
+```
+
+### Test Structure
+
+```
+tests/
+├── hooks/              # Custom hook tests
+├── mocks/              # MSW API handlers
+├── pages/
+│   ├── RepoDetailPage/     # Detail page & component tests
+│   └── ReposListPage/      # List page & component tests
+└── setup.ts
+```
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/         # Reusable UI components
+│   ├── Header.tsx
+│   ├── SearchBar.tsx
+│   ├── StatCard.tsx
+│   ├── LanguageBar.tsx
+│   ├── SkeletonGrid.tsx
+│   └── skeleton/       # Loading skeletons
+├── pages/              # Page components
+│   ├── ReposListing.tsx
+│   └── RepoDetailPage.tsx
+├── hooks/              # Custom React hooks
+│   ├── useRepos.ts
+│   └── useDebounce.ts
+├── types/              # TypeScript definitions
+│   └── github.ts
+├── utils/              # Helper functions
+│   └── api.ts
+└── App.tsx             # Root component with routing
+```
+
+## 🎯 Key Design Decisions
+
+### 1. Slug-Based URLs
+
+Uses `/repos/:owner/:name` instead of `/repos/:id` for better SEO and user experience.
+
+**Example:** `/repos/godaddy/kubernetes-client` instead of `/repos/4967118`
+
+### 2. API-Powered Search
+
+Uses GitHub's Search API (`/search/repositories`) instead of client-side filtering for more powerful search capabilities.
+
+### 3. Debounced Search (500ms)
+
+Waits 500ms after user stops typing before making API calls to reduce request spam and improve performance.
+
+### 4. React Query Caching
+
+- **5-minute stale time** - Data stays fresh for 5 minutes
+- **10-minute garbage collection** - Unused data cleared after 10 minutes
+- **Instant results** - Cached searches return immediately
+
+### 5. Component Composition
+
+Broke down large components into smaller, focused pieces:
+
+- `StatCard` - Reusable stat display
+- `LanguageBar` - Language breakdown visualization
+- `SkeletonGrid` - Reusable loading skeleton
+- `RepoHeader`, `RepoInfoGrid` - Focused sections
+
+## 🎨 Features Showcase
+
+### Repository List
+
+- Infinite scroll with 30 repos per page
+- Real-time search with debouncing
+- Responsive grid (1→2→3→4 columns)
+- Skeleton loading states
+- Repository cards with stats
+
+### Repository Details
+
+- Language breakdown with visual bar
+- Stats: stars, forks, watchers, issues
+- Metadata: created date, updated date, license, default branch
+- Archived badge for archived repos
+- Direct link to GitHub
+
+## 📈 Performance Optimizations
+
+1. **React Query Caching** - Reduces API calls with intelligent caching
+2. **Debounced Search** - 500ms delay prevents request spam
+3. **Code Splitting** - React Router enables automatic route-based splitting
+4. **Infinite Scroll** - Loads data progressively (30 repos at a time)
+5. **Skeleton Screens** - Better perceived performance during loading
+
+## 🚧 Known Limitations
+
+- GitHub API rate limit: 60 requests/hour (unauthenticated)
+- No repository comparison feature
+- No favorites/bookmarking (would require localStorage consent)
+
+## 🎓 What I Learned
+
+This project demonstrates:
+
+- **Modern React patterns** - Hooks, composition, custom hooks
+- **State management** - React Query for server state, useState for UI state
+- **Performance optimization** - Caching, debouncing, code splitting
+- **Testing best practices** - Unit, integration, and API mocking with MSW
+- **TypeScript proficiency** - Full type safety across the application
+- **Responsive design** - Mobile-first approach with Tailwind
+- **Component architecture** - Reusable, focused, testable components
+
+## 📝 Future Enhancements
+
+- Add filters (language, stars, last updated)
+- Repository comparison feature
+- Dark mode support
+- GitHub OAuth for higher rate limits
+- Virtual scrolling for better performance with large datasets
+- PWA with offline support
+- Analytics for popular repositories
+
+## 🙏 Acknowledgments
+
+Built as a take-home assignment for GoDaddy's SDE 2 position.
+
+- **GitHub API** - Comprehensive repository data
+- **Lucide** - Beautiful icons
+- **Tailwind CSS** - Rapid UI development
+
+---
+
+**Built with ❤️ using React + TypeScript**

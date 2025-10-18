@@ -13,21 +13,18 @@ const wrapper = ({ children }: { children: React.ReactNode }) => {
 
 describe("useRepos", () => {
   it("fetches first page of repos", async () => {
-    // 👈 'waitFor' is now imported, so remove it from the destructuring
     const { result } = renderHook(() => useRepos(), { wrapper });
 
-    await waitFor(() => !result.current.isPending, { timeout: 3000 }); // 👈 Use the imported waitFor
+    await waitFor(() => !result.current.isPending, { timeout: 3000 });
 
     expect(result.current.data?.pages[0].length).toBeGreaterThan(0);
     expect(result.current.error).toBeNull();
   });
 
   it("fetches next page correctly", async () => {
-    // 👈 'waitFor' is now imported, so remove it from the destructuring
     const { result } = renderHook(() => useRepos(), { wrapper });
 
-    await waitFor(() => !result.current.isPending, { timeout: 3000 }); // 👈 Use the imported waitFor
-
+    await waitFor(() => !result.current.isPending, { timeout: 3000 });
     if (result.current.hasNextPage) {
       await result.current.fetchNextPage();
 
@@ -40,12 +37,11 @@ describe("useRepos", () => {
   });
 
   it("handles search query", async () => {
-    // 👈 'waitFor' is now imported, so remove it from the destructuring
     const { result } = renderHook(() => useRepos({ searchQuery: "repo-1" }), {
       wrapper,
     });
 
-    await waitFor(() => !result.current.isPending, { timeout: 3000 }); // 👈 Use the imported waitFor
+    await waitFor(() => !result.current.isPending, { timeout: 3000 });
 
     expect(result.current.data?.pages[0][0].name).toContain("repo-1");
   });

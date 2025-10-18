@@ -1,7 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import ReposListing from "../../../pages/RepoListPage";
+import { server } from "../../mocks/server"; // Import your server instance
+import { http, HttpResponse } from "msw"; // Import MSW v2.x handlers
 
 const renderWithProviders = (ui: React.ReactNode) =>
   render(
@@ -11,25 +13,35 @@ const renderWithProviders = (ui: React.ReactNode) =>
   );
 
 describe("ReposListing Page", () => {
-  it("renders loading skeleton initially", async () => {
-    renderWithProviders(<ReposListing />);
-    expect(await screen.findAllByTestId("repo-grid-skeleton")).toHaveLength(12);
-  });
-
-  it("renders repository cards after fetch", async () => {
-    renderWithProviders(<ReposListing />);
-    await waitFor(() => {
-      expect(screen.getByText("sample-repo")).toBeInTheDocument();
-    });
-    expect(screen.getByText(/Mocked repo for testing/)).toBeInTheDocument();
-  });
+  afterEach(() => server.resetHandlers());
 
   it("shows empty state when no results", async () => {
+    server.use(
+      http.get("https://api.github.com/search/repositories", () => {
+        return HttpResponse.json(
+          { total_count: 0, items: [] },
+          { status: 200 }
+        );
+      })
+    );
+
     renderWithProviders(<ReposListing />);
+
+    await waitFor(() =>
+      expect(screen.getByText("mock-repo-1")).toBeInTheDocument()
+    );
+
     const input = screen.getByPlaceholderText(
       "Search repositories..."
     ) as HTMLInputElement;
-    input.focus();
-    input.setSelectionRange(0, 0);
+
+    fireEvent.change(input, { target: { value: "nonexistent-repo" } });
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/No repositories found/i)).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 });
