@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { Star, GitFork, AlertCircle, Eye } from "lucide-react";
 import RepoDetailPageSkeleton from "../../components/skeleton/RepoDetailPageSkeleton";
 import RepoErrorState from "../../components/RepoErrorState";
-import RepoHeader from "./components/RepoHeaderProps";
+import RepoHeader from "./components/RepoHeader";
 import StatCard from "./components/StatCard";
 import LanguageBar from "./components/LanguageBar";
 import RepoInfoGrid from "./components/RepoInfoGrid";

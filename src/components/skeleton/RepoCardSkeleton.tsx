@@ -3,7 +3,10 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const RepoCardSkeleton = () => {
   return (
-    <div className="bg-bg border border-slate-200 rounded-lg p-4 h-full flex flex-col gap-3 animate-pulse">
+    <div
+      id="repo-card-skeleton"
+      className="bg-bg border border-slate-200 rounded-lg p-4 h-full flex flex-col gap-3 animate-pulse"
+    >
       {/* Title */}
       <div className="flex items-start justify-between gap-2">
         <Skeleton width="70%" height={24} />

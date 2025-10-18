@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const RepoDetailPageSkeleton = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div id="repo-page-skeleton" className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header Section */}
       <div className="bg-bg border border-border rounded-lg p-6">
         <Skeleton width="50%" height={32} className="mb-2" />

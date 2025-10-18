@@ -26,7 +26,9 @@ const StatCard = ({
         />
         <span className="text-sm text-secondary">{label}</span>
       </div>
-      <p className="text-xl font-bold text-primary">{formatNumber(value)}</p>
+      <p className="text-xl font-bold text-primary">{`${formatNumber(
+        1000
+      )}`}</p>
     </div>
   );
 };

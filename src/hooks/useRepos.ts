@@ -1,4 +1,3 @@
-// src/hooks/useRepos.ts
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { Repository } from "../types";
 
