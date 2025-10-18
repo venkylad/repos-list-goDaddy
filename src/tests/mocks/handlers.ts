@@ -1,62 +1,50 @@
-import { http, HttpResponse } from "msw"; // Use 'http' instead of 'rest' and import 'HttpResponse'
+import { http, HttpResponse } from "msw";
+
+// Define a full repository object template for consistency across mocks
+const mockRepoTemplate = (id: number, name: string, description: string) => ({
+  id: id,
+  name: name,
+  full_name: `godaddy/${name}`,
+  description: description,
+  stargazers_count: 10,
+  forks_count: 2,
+  watchers_count: 5,
+  open_issues_count: 1,
+  archived: false,
+  html_url: `https://github.com/godaddy/${name}`,
+  default_branch: "main",
+  created_at: "2025-01-01T00:00:00Z",
+  updated_at: "2025-01-02T00:00:00Z",
+  license: { name: "MIT" },
+  owner: { login: "godaddy" },
+});
 
 export const handlers = [
-  http.get("https://api.github.com/search/repositories", ({ request }) => {
-    const url = new URL(request.url);
-    const q = url.searchParams.get("q"); // 'repo-1+org:godaddy'
+  // 1. Single repository handler (Fixes: useRepoDetail name assertion)
+  // Must return the exact repo name expected by the test: 'gdapi-php'
+  http.get("https://api.github.com/repos/:owner/:name", ({ params }) => {
+    const { name } = params;
 
-    // This mock needs to return the exact structure the hook expects for search results
-    if (q?.includes("repo-1")) {
-      return HttpResponse.json(
-        {
-          total_count: 1,
-          items: [
-            {
-              id: 101,
-              name: "repo-1-found", // Ensure this name matches the assertion logic
-              full_name: "godaddy/repo-1-found",
-              description: "Mock repo 1 for search",
-            },
-          ],
-        },
-        { status: 200 }
-      );
+    // Default mock data for successful detail fetch
+    const repoData = mockRepoTemplate(
+      123,
+      String(name),
+      "Mock repo description for detail view"
+    );
+
+    // The 'fetches repo and languages successfully' test expects 'gdapi-php'
+    if (name === "gdapi-php") {
+      repoData.name = "gdapi-php";
+      repoData.full_name = "godaddy/gdapi-php";
     }
 
-    // Default response for other searches
-    return HttpResponse.json({ total_count: 0, items: [] }, { status: 200 });
-  }),
-  // Mock fetching a single repository
-  http.get("https://api.github.com/repos/:owner/:name", ({ params }) => {
-    // Handler uses a single destructured argument
-    const { owner, name } = params; // Access parameters via 'params'
+    // The 'handles repo fetch error' test will use a separate server.use() override
 
-    // Use HttpResponse.json() and pass the status as a second argument
-    return HttpResponse.json(
-      {
-        id: 123,
-        name: String(name),
-        full_name: `${owner}/${name}`,
-        description: "Mocked repo description",
-        stargazers_count: 10,
-        forks_count: 2,
-        watchers_count: 5,
-        open_issues_count: 1,
-        archived: false,
-        html_url: `https://github.com/${owner}/${name}`,
-        default_branch: "main",
-        created_at: "2025-01-01T00:00:00Z",
-        updated_at: "2025-01-02T00:00:00Z",
-        license: { name: "MIT" },
-        owner: { login: owner },
-      },
-      { status: 200 }
-    );
+    return HttpResponse.json(repoData, { status: 200 });
   }),
 
-  // Mock fetching languages
+  // 2. Repository languages handler (Relies on the original mock data)
   http.get("https://api.github.com/repos/:owner/:name/languages", () => {
-    // No arguments needed, so use empty parenthesis
     return HttpResponse.json(
       {
         JavaScript: 5000,
@@ -66,31 +54,48 @@ export const handlers = [
     );
   }),
 
-  // Mock fetching organization repositories
-  http.get("https://api.github.com/orgs/godaddy/repos", () => {
-    // No arguments needed
+  // 3. Organization repositories handler (Fixes: App.test.tsx and useRepos listing failures)
+  // Must return an array that contains "sample-repo" for App.test.tsx
+  http.get("https://api.github.com/orgs/:org/repos", () => {
     return HttpResponse.json(
       [
-        {
-          id: 1,
-          name: "mock-repo-1",
-          full_name: "godaddy/mock-repo-1",
-          description: "Mock repo 1",
-          stargazers_count: 12,
-          forks_count: 3,
-          watchers_count: 5,
-          open_issues_count: 1,
-          archived: false,
-          html_url: "https://github.com/godaddy/mock-repo-1",
-          default_branch: "main",
-          created_at: "2025-01-01T00:00:00Z",
-          updated_at: "2025-01-02T00:00:00Z",
-          license: { name: "MIT" },
-          owner: { login: "godaddy" },
-          language: "JavaScript",
-        },
+        mockRepoTemplate(1, "sample-repo", "Mocked repo for testing"), // 👈 Used by App.test.tsx
+        mockRepoTemplate(2, "another-repo", "Another mock repo"),
       ],
       { status: 200 }
     );
+  }),
+
+  // 4. Search repositories handler (Fixes: useRepos search and ReposListPage empty state failures)
+  http.get("https://api.github.com/search/repositories", ({ request }) => {
+    const url = new URL(request.url);
+    const q = url.searchParams.get("q");
+
+    // Mock for successful search (used by 'handles search query' test)
+    if (q?.includes("repo-1")) {
+      return HttpResponse.json(
+        {
+          total_count: 1,
+          items: [
+            mockRepoTemplate(101, "repo-1-found", "Mock repo 1 for search"),
+          ],
+        },
+        { status: 200 }
+      );
+    }
+
+    // Mock for no results (used by 'shows empty state when no results' test)
+    if (q?.includes("nonexistent-repo")) {
+      return HttpResponse.json(
+        {
+          total_count: 0,
+          items: [], // CRITICAL: Empty array for no results
+        },
+        { status: 200 }
+      );
+    }
+
+    // Fallback response for unhandled searches
+    return HttpResponse.json({ total_count: 0, items: [] }, { status: 200 });
   }),
 ];
