@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star, GitFork, AlertCircle, Eye, ExternalLink } from "lucide-react";
-import { formatNumber, formatDate } from "../utils/api";
-import type { RepoSummary } from "../types";
+import { formatNumber, formatDate, getLanguageColor } from "../../../utils/api";
+import type { RepoSummary } from "../../../types";
 
 interface RepoCardProps {
   repo: RepoSummary;
@@ -24,7 +24,12 @@ const RepoCard = ({ repo }: RepoCardProps) => {
           />
         </Link>
         {repo.language && (
-          <div className="flex items-center bg-danger px-2 py-1 rounded text-xs font-semibold text-white flex-shrink-0">
+          <div
+            style={{
+              backgroundColor: getLanguageColor(repo.language, repo.id),
+            }}
+            className={`flex items-center px-2 py-1 rounded text-xs font-semibold text-white flex-shrink-0 [text-shadow:0_0_2px_rgba(0,0,0)]`}
+          >
             {repo.language}
           </div>
         )}

@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import ReposListing from "./pages/ReposListing";
+import ReposListing from "./pages/RepoListPage";
 import RepoDetailPage from "./pages/RepoDetailPage";
 import Layout from "./components/Layout";
 

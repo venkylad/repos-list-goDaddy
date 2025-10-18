@@ -16,23 +16,25 @@ export const formatDate = (dateString: string): string => {
   });
 };
 
-export const getLanguageColor = (language: string | null): string => {
-  const languageColors: Record<string, string> = {
+export const getLanguageColor = (language: string, index: number): string => {
+  const colors: Record<string, string> = {
     JavaScript: "#f1e05a",
     TypeScript: "#3178c6",
     Python: "#3572A5",
     Java: "#b07219",
-    Go: "#00ADD8",
-    Rust: "#ce422b",
-    Ruby: "#cc342d",
-    PHP: "#777bb4",
+    "C#": "#178600",
     C: "#555555",
     "C++": "#f34b7d",
-    "C#": "#239120",
-    Swift: "#FA7343",
-    Kotlin: "#7F52FF",
+    PHP: "#4F5D95",
+    Ruby: "#701516",
+    Go: "#00ADD8",
+    Rust: "#dea584",
+    Swift: "#ffac45",
+    Kotlin: "#A97BFF",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
     Shell: "#89e051",
   };
 
-  return languageColors[language || ""] || "#858585";
+  return colors[language] || `hsl(${index * 137.5}, 70%, 50%)`;
 };
