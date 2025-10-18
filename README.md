@@ -175,18 +175,6 @@ Broke down large components into smaller, focused pieces:
 - No repository comparison feature
 - No favorites/bookmarking (would require localStorage consent)
 
-## 🎓 What I Learned
-
-This project demonstrates:
-
-- **Modern React patterns** - Hooks, composition, custom hooks
-- **State management** - React Query for server state, useState for UI state
-- **Performance optimization** - Caching, debouncing, code splitting
-- **Testing best practices** - Unit, integration, and API mocking with MSW
-- **TypeScript proficiency** - Full type safety across the application
-- **Responsive design** - Mobile-first approach with Tailwind
-- **Component architecture** - Reusable, focused, testable components
-
 ## 📝 Future Enhancements
 
 - Add filters (language, stars, last updated)
@@ -197,14 +185,3 @@ This project demonstrates:
 - PWA with offline support
 - Analytics for popular repositories
 
-## 🙏 Acknowledgments
-
-Built as a take-home assignment for GoDaddy's SDE 2 position.
-
-- **GitHub API** - Comprehensive repository data
-- **Lucide** - Beautiful icons
-- **Tailwind CSS** - Rapid UI development
-
----
-
-**Built with ❤️ using React + TypeScript**
