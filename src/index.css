@@ -1,1 +1,52 @@
 @import "tailwindcss";
+@import "@fontsource/inter";
+
+@theme {
+  /* Brand palette */
+  --color-primary: #0366d6;
+  --color-secondary: #6b7280;
+  --color-success: #16a34a;
+  --color-warning: #facc15;
+  --color-danger: #ef4444;
+  --color-bg: #ffffff;
+  --color-border: #e5e7eb;
+  --color-muted: #9ca3af;
+}
+
+/* Short aliases */
+@utility text-primary {
+  color: var(--color-primary);
+}
+@utility text-secondary {
+  color: var(--color-secondary);
+}
+@utility text-success {
+  color: var(--color-success);
+}
+@utility text-warning {
+  color: var(--color-warning);
+}
+@utility text-danger {
+  color: var(--color-danger);
+}
+
+@utility bg-primary {
+  background-color: var(--color-primary);
+}
+@utility bg-secondary {
+  background-color: var(--color-secondary);
+}
+@utility bg-bg {
+  background-color: var(--color-bg);
+}
+
+@utility border-primary {
+  border-color: var(--color-primary);
+}
+@utility border-secondary {
+  border-color: var(--color-secondary);
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui;
+}
