@@ -33,11 +33,19 @@ export const useRepoDetail = (owner?: string, name?: string) => {
 
   const [repoResult, langResult] = results;
 
+  type RepoDetailResult = {
+    repo?: Repository;
+    isRepoLoading: boolean;
+    repoError: unknown;
+    languages?: Languages;
+    isLangLoading: boolean;
+  };
+
   return {
     repo: repoResult.data,
-    isRepoLoading: repoResult.isPending,
+    isRepoLoading: !!repoResult.isPending,
     repoError: repoResult.error,
     languages: langResult.data,
-    isLangLoading: langResult.isPending,
-  };
+    isLangLoading: !!langResult.isPending,
+  } as RepoDetailResult;
 };
